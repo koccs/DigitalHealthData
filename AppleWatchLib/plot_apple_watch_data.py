@@ -68,11 +68,14 @@ def plot_heart_rate(apple_watch):
         # format time column to be readable
         sub_df['timestamp'] = list(map(lambda t: t.strftime('%H:%M:%S'), sub_df['time']))
         source = ColumnDataSource(sub_df)
-        plt = plot.circle(x='time',
+        plot.circle(x='time',
                   y='heart_rate',
                   source=source,
-                  size=10,
+                  size=8,
                   fill_color=color_palette[idx],
+                  legend=dt)
+        plot.line(x='time', y='heart_rate', source=source,
+                  line_color=color_palette[idx],
                   legend=dt)
 
         plot.select_one(HoverTool).tooltips = [
@@ -558,37 +561,37 @@ def run(apple_watch, start_date, end_date, show_plots):
     except (IndexError, ValueError):
         logger.warning('Missing heart rate data!')
 
-    try:
-        plot_heart_rate_variability(apple_watch)
-    except (IndexError, ValueError):
-        logger.warning('Missing heart rate variability data!')
+    # try:
+    #     plot_heart_rate_variability(apple_watch)
+    # except (IndexError, ValueError):
+    #     logger.warning('Missing heart rate variability data!')
 
-    try:
-        plot_resting_heart_rate(apple_watch)
-    except (IndexError, ValueError):
-        logger.warning('Missing resting heart rate data!')
+    # try:
+    #     plot_resting_heart_rate(apple_watch)
+    # except (IndexError, ValueError):
+    #     logger.warning('Missing resting heart rate data!')
 
-    try:
-        plot_walking_heart_rate(apple_watch)
-    except (IndexError, ValueError):
-        logger.warning('Missing walking heart rate data!')
+    # try:
+    #     plot_walking_heart_rate(apple_watch)
+    # except (IndexError, ValueError):
+    #     logger.warning('Missing walking heart rate data!')
 
-    try:
-        plot_distance(apple_watch)
-    except (IndexError, ValueError):
-        logger.warning('Missing distance walked data!')
+    # try:
+    #     plot_distance(apple_watch)
+    # except (IndexError, ValueError):
+    #     logger.warning('Missing distance walked data!')
 
-    try:
-        plot_basal_energy(apple_watch)
-    except (IndexError, ValueError):
-        logger.warning('Missing basal energy data!')
+    # try:
+    #     plot_basal_energy(apple_watch)
+    # except (IndexError, ValueError):
+    #     logger.warning('Missing basal energy data!')
 
-    try:
-        plot_stand_hour(apple_watch)
-    except (IndexError, ValueError):
-        logger.warning('Missing stand hour data!')
+    # try:
+    #     plot_stand_hour(apple_watch)
+    # except (IndexError, ValueError):
+    #     logger.warning('Missing stand hour data!')
 
-    try:
-        plot_steps(apple_watch)
-    except (IndexError, ValueError):
-        logger.warning('Missing step count data!')
+    # try:
+    #     plot_steps(apple_watch)
+    # except (IndexError, ValueError):
+    #     logger.warning('Missing step count data!')

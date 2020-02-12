@@ -29,6 +29,10 @@ class AppleWatchData(object):
         self.xmldoc = minidom.parse(self.file_path)
         self.records = self.xmldoc.getElementsByTagName(self.tag_name)
 
+        if 'Apple Watch' in self.source_name:
+            self.source_name = self.source_name.replace('Apple Watch',  u'Apple\xa0Watch')
+
+
     def parse_tag(self, attribute):
         """
         Filter for records in Health Data matching attribute name.
@@ -37,10 +41,9 @@ class AppleWatchData(object):
         :return: a list of all records matching class's source name and attribute name
         """
         record_list = []
+
         for s in self.records:
             found1 = s.attributes['type'].value == attribute
-            if self.source_name in 'Apple Watch':
-                self.source_name = self.source_name.replace('Apple Watch',  u'Apple\xa0Watch')
             found2 = self.source_name in s.attributes['sourceName'].value
             # parse the record
             if found1 and found2:
@@ -61,8 +64,8 @@ class AppleWatchData(object):
             start_time = datetime.strptime(start_timestamp_string, '%Y-%m-%d %H:%M:%S -0500')
             end_time = datetime.strptime(end_timestamp_string, '%Y-%m-%d %H:%M:%S -0500')
         except ValueError:
-            start_time = datetime.strptime(start_timestamp_string, '%Y-%m-%d %H:%M:%S -0400')
-            end_time = datetime.strptime(end_timestamp_string, '%Y-%m-%d %H:%M:%S -0400')
+            start_time = datetime.strptime(start_timestamp_string, '%Y-%m-%d %H:%M:%S +0100')
+            end_time = datetime.strptime(end_timestamp_string, '%Y-%m-%d %H:%M:%S +0100')
 
         # Extract biometric data
         try:
