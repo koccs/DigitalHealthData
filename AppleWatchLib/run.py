@@ -28,14 +28,17 @@ if __name__ == '__main__':
     parser.add_argument('-save_directory', action='store', dest='save_directory', help='Local path to save plot to', default=None, type=str)
 
     # args = parser.parse_args()
-    args = parser.parse_args(['-xml_file_path', '~/Work/export_mini.xml',
-                              '-start_date', '2020-01-01 00:00',
-                              '-end_date', '2020-02-07 00:00',
-                              '-source_name', 'Adams Apple Watch',
+    args = parser.parse_args(['-xml_file_path', '~/Work/export.xml',
+                              '-start_date', '2020-02-10 00:00',
+                              '-end_date', '2020-02-17 00:00',
+                              '-source_name', 'Ádám’s Apple Watch',
+                            #   '-start_date', '2020-02-01 00:00',
+                            #   '-end_date', '2020-02-17 00:00',
+                            #   '-source_name', 'Adams Apple Watch',
                               '-verbose',
                               '-save_directory', './results'])
 
-    apple_watch = AppleWatchData(args.xml_file_path, args.source_name, args.tag_name)
+    apple_watch = AppleWatchData(args.xml_file_path, args.source_name, args.start_date, args.end_date)
 
     # create directory to save plots
     if args.save_directory:

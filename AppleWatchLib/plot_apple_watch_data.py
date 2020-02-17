@@ -45,12 +45,11 @@ def plot_heart_rate(apple_watch):
     """
     logger.info('Loading and Plotting Heart Rate Data')
     df = apple_watch.load_heart_rate_data()
-    df = df[(df['start_timestamp'] > START_DATE) & (df['start_timestamp'] < END_DATE)]
     df['date'] = list(map(lambda dt: dt.strftime('%m/%d/%y'), df['start_timestamp']))
     df['time'] = list(map(lambda d: d.time(), df['start_timestamp']))
 
     plot = figure(
-        width=800,
+        width=1000,
         height=600,
         title='Apple Watch Heart Rate Data',
         x_axis_type='datetime',
@@ -111,7 +110,6 @@ def plot_heart_rate_variability(apple_watch):
     """
     logger.info('Loading and Plotting Heart Rate Variability Data')
     df = apple_watch.load_heart_rate_variability_data()
-    df = df[(df['start_timestamp'] > START_DATE) & (df['start_timestamp'] < END_DATE)]
     df['date'] = list(map(lambda d: d.strftime('%m/%d/%y'), df['start_timestamp']))
     df['time'] = list(map(lambda d: d.strftime('%H:%M:%S'), df['start_timestamp']))
     dates = list(df['date'].unique())
@@ -120,7 +118,7 @@ def plot_heart_rate_variability(apple_watch):
     del df['instantaneous_bpm']
     source = ColumnDataSource(df)
     plot = figure(
-        width=800,
+        width=1000,
         height=600,
         x_range=dates,
         x_axis_label='Date',
@@ -165,12 +163,11 @@ def plot_resting_heart_rate(apple_watch):
     """
     logger.info('Loading and Plotting Resting Heart Rate Data')
     df = apple_watch.load_resting_heart_rate_data()
-    df = df[(df['start_timestamp'] > START_DATE) & (df['start_timestamp'] < END_DATE)]
     df['date'] = list(map(lambda dt: dt.strftime('%m/%d/%y'), df['start_timestamp']))
 
     source = ColumnDataSource(df)
     plot = figure(
-        width=800,
+        width=1000,
         height=600,
         x_axis_type='datetime',
         x_axis_label='Date',
@@ -209,12 +206,11 @@ def plot_walking_heart_rate(apple_watch):
     """
     logger.info('Loading and Plotting Walking/Running Data')
     df = apple_watch.load_walking_heart_rate_data()
-    df = df[(df['start_timestamp'] > START_DATE) & (df['start_timestamp'] < END_DATE)]
     df['date'] = list(map(lambda dt: dt.strftime('%m/%d/%y'), df['start_timestamp']))
 
     source = ColumnDataSource(df)
     plot = figure(
-        width=800,
+        width=1000,
         height=600,
         x_axis_type='datetime',
         x_axis_label='Date',
@@ -255,7 +251,6 @@ def plot_distance(apple_watch):
     """
     logger.info('Loading and Plotting Distance Walked/Ran Data')
     df = apple_watch.load_distance_data()
-    df = df[(df['start_timestamp'] > START_DATE) & (df['start_timestamp'] < END_DATE)]
     df['date'] = list(map(lambda d: d.strftime('%m/%d/%y'), df['start_timestamp']))
     df['hour'] = list(map(lambda d: int(d.strftime('%H')), df['start_timestamp']))
 
@@ -331,7 +326,6 @@ def plot_basal_energy(apple_watch):
     logger.info('Generating Basal Energy Plot')
 
     df = apple_watch.load_basal_energy_data()
-    df = df[(df['start_timestamp'] > START_DATE) & (df['start_timestamp'] < END_DATE)]
     df['date'] = list(map(lambda d: d.strftime('%m/%d/%y'), df['start_timestamp']))
     df['hour'] = list(map(lambda d: int(d.strftime('%H')), df['start_timestamp']))
 
@@ -406,7 +400,6 @@ def plot_stand_hour(apple_watch):
     logger.info('Loading and Generating Stand Hour Heat Map')
 
     df = apple_watch.load_stand_hour_data()
-    df = df[(df['start_timestamp'] > START_DATE) & (df['start_timestamp'] < END_DATE)]
     df['date'] = list(map(lambda d: d.strftime('%m/%d/%y'), df['start_timestamp']))
     df['hour'] = list(map(lambda d: int(d.strftime('%H')), df['start_timestamp']))
     df['stand_hour'] = list(map(lambda label: 1 if label == 'Stood' else 0, df['stand_hour']))
@@ -474,7 +467,6 @@ def plot_steps(apple_watch):
     """
     logger.info('Loading and Generating Steps Heat Map')
     df = apple_watch.load_step_data()
-    df = df[(df['start_timestamp'] > START_DATE) & (df['start_timestamp'] < END_DATE)]
     df['date'] = list(map(lambda d: d.strftime('%m/%d/%y'), df['start_timestamp']))
     df['hour'] = list(map(lambda d: int(d.strftime('%H')), df['start_timestamp']))
 

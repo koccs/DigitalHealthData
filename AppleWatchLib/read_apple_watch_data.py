@@ -12,7 +12,7 @@ class AppleWatchData(object):
     Object to contain all relevant data access calls for Apple Watch health data.
     '''
     # TODO: make parsing of xml file a helper function
-    def __init__(self, xml_data_file_path, source_name, tag_name='Record'):
+    def __init__(self, xml_data_file_path, source_name, start_date, end_date, tag_name='Record'):
         """
         Class can be generalized to retrieve data from sources other than Apple Watch.
 
@@ -20,6 +20,13 @@ class AppleWatchData(object):
         :param source_name: source of health data (i.e. Apple Watch)
         :param tag_name: xml tag to parse data from
         """
+        try:
+            self.START_DATE = datetime.strptime(start_date, '%Y-%m-%d %H:%M')
+            self.END_DATE = datetime.strptime(end_date, '%Y-%m-%d %H:%M')
+        except ValueError:
+            self.START_DATE = datetime.strptime(start_date, '%m/%d/%y %H:%M')
+            self.END_DATE = datetime.strptime(end_date, '%m/%d/%y %H:%M')
+
         if xml_data_file_path.startswith('~'):
             self.file_path = os.path.expanduser(xml_data_file_path)
         else:
@@ -27,11 +34,29 @@ class AppleWatchData(object):
         self.source_name = source_name
         self.tag_name = tag_name
         self.xmldoc = minidom.parse(self.file_path)
-        self.records = self.xmldoc.getElementsByTagName(self.tag_name)
+        all_records = self.xmldoc.getElementsByTagName(self.tag_name)
+        self.records = list(filter(lambda record: self.filter_date_slice(record), all_records))
 
         if 'Apple Watch' in self.source_name:
             self.source_name = self.source_name.replace('Apple Watch',  u'Apple\xa0Watch')
 
+    def filter_date_slice(self, record):
+        """
+        Filter for records in Health Data matching requested date range.
+
+        :param attribute: attribute name of xml Record tag
+        """
+        desired_data = []
+        # Extract start and end timestamps
+        start_timestamp_string = record.attributes['startDate'].value
+        try:
+            start_time = datetime.strptime(start_timestamp_string, '%Y-%m-%d %H:%M:%S +0100')
+        except ValueError:
+            start_time = datetime.strptime(start_timestamp_string, '%Y-%m-%d %H:%M:%S -0500')
+        if (start_time >= self.START_DATE) & (start_time <= self.END_DATE):
+            desired_data.append(record)
+
+        return desired_data
 
     def parse_tag(self, attribute):
         """
@@ -61,11 +86,11 @@ class AppleWatchData(object):
         start_timestamp_string = record.attributes['startDate'].value
         end_timestamp_string = record.attributes['endDate'].value
         try:
-            start_time = datetime.strptime(start_timestamp_string, '%Y-%m-%d %H:%M:%S -0500')
-            end_time = datetime.strptime(end_timestamp_string, '%Y-%m-%d %H:%M:%S -0500')
-        except ValueError:
             start_time = datetime.strptime(start_timestamp_string, '%Y-%m-%d %H:%M:%S +0100')
             end_time = datetime.strptime(end_timestamp_string, '%Y-%m-%d %H:%M:%S +0100')
+        except ValueError:
+            start_time = datetime.strptime(start_timestamp_string, '%Y-%m-%d %H:%M:%S -0500')
+            end_time = datetime.strptime(end_timestamp_string, '%Y-%m-%d %H:%M:%S -0500')
 
         # Extract biometric data
         try:
